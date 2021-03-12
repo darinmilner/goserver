@@ -1,16 +1,59 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h1>This is the homepage</h1>
-                <p>This is some text</p>
-                <img src="/static/img/house.jpg" height="320" width="640">
+<div id="main-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+
+    <ol class="carousel-indicators">
+        <li data-target="#main-carousel" data-slide-to="0" class="active"></li>
+        <li data-target="#main-carousel" data-slide-to="1"></li>
+        <li data-target="#main-carousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/static/img/breakfast.jpg" class="d-block w-100" alt="breakfast">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Slide Label</h5>
+                <p>Text</p>
             </div>
         </div>
-    
+        <div class="carousel-item">
+            <img src="/static/img/house.jpg" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Slide Label</h5>
+                <p>Text</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="/static/img/room.jpg" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Slide Label</h5>
+                <p>Text</p>
+            </div>
+        </div>
     </div>
+</div>
+
+
+<div class="container">
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center mt-3">Welcome To Our Homestyle Bed and Breakfast</h1>
+            <p>Your home away from home. {Description text goes here.}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Odio enim voluptatum commodi porro excepturi consequuntur incidunt dolor nisi,
+                magnam quibusdam distinctio earum. Eligendi labore pariatur consectetur
+                cupiditate perferendis commodi provident.</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col text-center">
+            <a href="/search-availability" class="btn btn-warning">Make Reservation Now</a>
+        </div>
+    </div>
+</div>
+   
 {{end}}
 
 <!-- 
