@@ -72,7 +72,7 @@
                     <a class="nav-link" href="/contact" tabindex="-1" aria-disabled="true">Contact us</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/search-availability" tabindex="-1" aria-disabled="true">Book Now</a>
+                    <a class="nav-link" href="/make-reservation" tabindex="-1" aria-disabled="true">Book Now</a>
                 </li>
             </ul>
         </div>
@@ -150,6 +150,18 @@
             confirmButtonText: confirmationButton
         })
     }
+
+    {{with .Error}}
+    notify("{{.}}", "error")
+    {{end}}
+
+    {{with .Flash}}
+     notify("{{.}}", "flash")
+    {{ end }}
+
+    {{with .Warning}}
+    notify("{{.}}", "warning")
+    {{end}}
 
     function Prompt() {
         let toast = function (c) {
