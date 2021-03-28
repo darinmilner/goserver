@@ -1,8 +1,8 @@
-create_table("roomRestrictions") {
+create_table("room_restrictions") {
     t.Column("id", "integer", {primary: true})
-    t.Column("startDate","date", {})
-    t.Column("endDate","date", {})
-    t.Column("roomID","integer", {})
-    t.Column("reservationID","integer", {})
-    t.Column("restrictionID","integer", {})
+    t.Column("start_date","date", {})
+    t.Column("end_date","date", {})
+    t.Column("room_id","integer", {})
+    t.Column("reservation_id","integer", {})
+    t.Column("restriction_id","integer", {})
 }

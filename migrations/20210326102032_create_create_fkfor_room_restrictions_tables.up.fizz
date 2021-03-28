@@ -1,9 +1,9 @@
-add_foreign_key("roomRestrictions","roomID", {"rooms" : ["id"]}, {
+add_foreign_key("room_restrictions","room_id", {"rooms" : ["id"]}, {
     "on_delete": "cascade",
     "on_update": "cascade",
 })
 
-add_foreign_key("roomRestrictions","restrictionID", {"restrictions" : ["id"]}, {
+add_foreign_key("room_restrictions","restriction_id", {"restrictions" : ["id"]}, {
     "on_delete": "cascade",
     "on_update": "cascade",
 })
