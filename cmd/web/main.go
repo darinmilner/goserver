@@ -35,6 +35,20 @@ func main() {
 
 	defer db.SQL.Close()
 
+	defer close(app.MailChan)
+
+	log.Println("Starting Email listener...")
+	listenForMail()
+
+	//Email from Go Standard Library
+	// from := "me@here.com"
+	// auth := smtp.PlainAuth("", from, "", "localhost")
+
+	// err = smtp.SendMail("localhost:1025", auth, from, []string{"you@there.com"}, []byte("Hello, Test"))
+
+	if err != nil {
+		log.Print("Email Error")
+	}
 	fmt.Println(fmt.Sprintf("Starting app on port %s", portNumber))
 
 	srv := &http.Server{
@@ -53,6 +67,10 @@ func run() (*driver.DB, error) {
 	gob.Register(models.Room{})
 	gob.Register(models.Restriction{})
 	//Change to true when in production
+
+	mailChan := make(chan models.MailData)
+	app.MailChan = mailChan
+
 	app.InProduction = false
 
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)

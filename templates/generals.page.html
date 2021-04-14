@@ -35,8 +35,6 @@
        document
             .getElementById("check-availability-btn")
             .addEventListener("click", function () {
-                //notify("This is a test msg", "error");
-
                 let html = `
             <form id="checkAvailabiltyForm" action="" method="post" novalidate class="needsValidation">
                 <div class="form-row">
@@ -61,6 +59,7 @@
                         const rp = new DateRangePicker(elem, {
                             format: "yyyy-mm-dd",
                             showOnFocus: true,
+                            minDate: new Date(),
                         })
                     },
                     didOpen: () => {
@@ -75,17 +74,37 @@
                         let formData = new FormData(form);
 
                         formData.append("csrf_token","{{.CSRFToken}}");
-
+                        formData.append("room-id", "1")
                         fetch("/search-availability-json", {
                             method: "post",
                             body: formData,
+                           
                         })
                         .then(response => {
                             return response.json();
                         }).then(data => {
-                            console.log(data);
-                            console.log(data.ok);
-                            console.log(data.message);
+                            if (data.ok) {
+                                console.log("Room is available")
+                                attention.custom({
+                                    icon: "success",
+                                     showConfirmButton: false,
+                                    msg: "<p>Room is available<p>"
+                                        + '<p><a href="/book-room?id=' +
+                                            data.roomId +
+                                            '&s=' +
+                                            data.startDate +
+                                            '&e=' +
+                                            data.endDate +
+                                            '"class="btn btn-primary">'
+                                            + "BOOK NOW</a></p>"
+                                })
+                            }else {
+                                console.log("Room is not available")
+                                attention.error ({
+                                    msg: "The room is not available",
+
+                                })
+                            }
                         })
                     }
                 });
