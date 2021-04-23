@@ -7,13 +7,16 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"time"
 
 	"github.com/darinmilner/goserver/internal/config"
 	"github.com/darinmilner/goserver/internal/models"
 	"github.com/justinas/nosurf"
 )
 
-var functions = template.FuncMap{}
+var functions = template.FuncMap{
+	"humanDate": HumanDate,
+}
 
 var app *config.AppConfig
 
@@ -24,6 +27,11 @@ func NewRenderer(a *config.AppConfig) {
 	app = a
 }
 
+//HumanDate returns time in YYYY-MM-DD
+func HumanDate(t time.Time) string {
+	return t.Format("2006-01-02")
+}
+
 //AddDefaultData adds data
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
 
@@ -31,6 +39,10 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 	td.Warning = app.Session.PopString(r.Context(), "warning")
 	td.Error = app.Session.PopString(r.Context(), "error")
 	td.CSRFToken = nosurf.Token(r)
+	if app.Session.Exists(r.Context(), "userId") {
+		td.IsAuthenticated = 1
+	}
+
 	return td
 }
 

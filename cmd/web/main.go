@@ -17,7 +17,7 @@ import (
 	"github.com/darinmilner/goserver/internal/render"
 )
 
-const portNumber = ":8080"
+const portNumber = ":8000"
 
 var app config.AppConfig
 var session *scs.SessionManager
@@ -38,6 +38,7 @@ func main() {
 	defer close(app.MailChan)
 
 	log.Println("Starting Email listener...")
+	//helpers.HashPassword("password123")
 	listenForMail()
 
 	//Email from Go Standard Library

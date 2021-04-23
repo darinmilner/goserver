@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/darinmilner/goserver/internal/helpers"
 	"github.com/justinas/nosurf"
 )
 
@@ -31,4 +32,16 @@ func NoSurf(next http.Handler) http.Handler {
 //SessionLoad middleware loads and saves the session on each request
 func SessionLoad(next http.Handler) http.Handler {
 	return session.LoadAndSave(next)
+}
+
+//Auth checks to see if someone is logged in
+func Auth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !helpers.IsAuthenticated(r) {
+			session.Put(r.Context(), "error", "Must be logged in!")
+			http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }

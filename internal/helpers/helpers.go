@@ -6,6 +6,7 @@ import (
 	"runtime/debug"
 
 	"github.com/darinmilner/goserver/internal/config"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var app *config.AppConfig
@@ -27,4 +28,14 @@ func ServerError(w http.ResponseWriter, err error) {
 
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 
+}
+func IsAuthenticated(r *http.Request) bool {
+	exists := app.Session.Exists(r.Context(), "userId")
+	return exists
+}
+
+func HashPassword(password string) {
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), 12)
+
+	fmt.Println(string(hashedPassword))
 }
