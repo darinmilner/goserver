@@ -54,11 +54,19 @@
 
         <hr>
         <hr>
-
+    <div class="float-left">
         <input type="submit" class="btn btn-success" value="Save">
+        {{if eq $src "cal"}}
+            <a href="#!" onclick="window.history.go(-1)" class="btn btn-danger">CANCEL</a>
+        {{else}}
         <a href="/admin/{{$src}}-reservations" class="btn btn-danger">CANCEL</a>
+       {{end}}
         <a href="#!" class="btn btn-info" onclick="processRes({{$res.ID}})">MARK AS PROCESSED</a>
-
+    </div>
+    <div class="float-right">
+        <a href="#!" class="btn btn-danger" onclick="deleteRes({{$res.ID}})">DELETE</a>
+    </div>
+    <div class="clearfix"></div>
     </form>
 </div>
 
@@ -75,6 +83,19 @@
             callback: function (result) {
                 if (result !== false) {
                     window.location.href = "/admin/process-reservation/{{$src}}/" + id;
+                }
+            }
+        })
+    }
+
+    function deleteRes(id) {
+        attention.custom({
+
+            icon: "warning",
+            msg: "Are you sure?",
+            callback: function(result) {
+                if (result !== false) {
+                    window.location.href = "/admin/delete-reservation/{{$src}}/" + id;
                 }
             }
         })

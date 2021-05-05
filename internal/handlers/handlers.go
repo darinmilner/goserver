@@ -608,7 +608,102 @@ func (m *Repository) AdminShowReservation(w http.ResponseWriter, r *http.Request
 
 //AdminReservationsCalender display the reservation calender
 func (m *Repository) AdminReservationsCalendar(w http.ResponseWriter, r *http.Request) {
-	render.Template(w, r, "admin.reservations.calendar.page.html", &models.TemplateData{})
+
+	//assume there is no month/year specified
+	now := time.Now()
+
+	if r.URL.Query().Get("y") != "" {
+		year, _ := strconv.Atoi(r.URL.Query().Get("y"))
+		month, _ := strconv.Atoi(r.URL.Query().Get("m"))
+
+		now = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local)
+	}
+
+	data := make(map[string]interface{})
+
+	data["now"] = now
+
+	next := now.AddDate(0, 1, 0)
+	last := now.AddDate(0, -1, 0)
+
+	nextMonth := next.Format("01")
+	nextMonthYear := next.Format("2006")
+
+	lastMonth := last.Format("01")
+	lastMonthYear := last.Format("2006")
+
+	stringMap := make(map[string]string)
+	stringMap["nextMonth"] = nextMonth
+	stringMap["nextMonthYear"] = nextMonthYear
+	stringMap["lastMonth"] = lastMonth
+	stringMap["lastMonthYear"] = lastMonthYear
+
+	stringMap["thisMonth"] = now.Format("01")
+	stringMap["thisMonthYear"] = now.Format("2006")
+
+	//get the first and last days of the month
+	currentYear, currentMonth, _ := now.Date()
+	currentLocation := now.Location()
+
+	firstOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
+
+	intMap := make(map[string]int)
+	intMap["daysInMonth"] = lastOfMonth.Day()
+
+	rooms, err := m.DB.AllRooms()
+
+	log.Print(rooms)
+
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	data["rooms"] = rooms
+
+	for _, x := range rooms {
+		//create maps
+		reservationMap := make(map[string]int)
+		blockMap := make(map[string]int)
+
+		for d := firstOfMonth; d.After(lastOfMonth) == false; d = d.AddDate(0, 0, 1) {
+			reservationMap[d.Format("2006-01-2")] = 0
+			blockMap[d.Format("2006-01-2")] = 0
+		}
+
+		//Get All restrictions for the current room
+		restrictions, err := m.DB.GetRestrictionsForRoomByDate(x.ID, firstOfMonth, lastOfMonth)
+		if err != nil {
+			helpers.ServerError(w, err)
+			return
+		}
+
+		for _, y := range restrictions {
+			if y.ReservationID > 0 {
+				//Reservation
+				for d := y.StartDate; d.After(y.EndDate) == false; d = d.AddDate(0, 0, 1) {
+					reservationMap[d.Format("2006-01-2")] = y.ReservationID
+				}
+			} else {
+				//Block
+				blockMap[y.StartDate.Format("2006-01-2")] = y.ID
+			}
+		}
+
+		data[fmt.Sprintf("reservation_map_%d", x.ID)] = reservationMap
+		data[fmt.Sprintf("block_map_%d", x.ID)] = blockMap
+		log.Print(data[fmt.Sprintf("block_map_%d", x.ID)])
+
+		m.App.Session.Put(r.Context(), fmt.Sprintf("block_map_%d", x.ID), blockMap)
+
+	}
+
+	render.Template(w, r, "admin.reservations.calendar.page.html", &models.TemplateData{
+		StringMap: stringMap,
+		Data:      data,
+		IntMap:    intMap,
+	})
 }
 
 //AdminPostShowReservation shows the reservation details
@@ -664,6 +759,17 @@ func (m *Repository) AdminProcessReservation(w http.ResponseWriter, r *http.Requ
 	src := chi.URLParam(r, "src")
 
 	_ = m.DB.UpdateProcessedForReservation(id, 1)
+
+	m.App.Session.Put(r.Context(), "flash", "Reservation marked as complete")
+	http.Redirect(w, r, fmt.Sprintf("/admin/%s-reservations", src), http.StatusSeeOther)
+}
+
+//AdminProcessReservation deletes a reservation
+func (m *Repository) AdminDeleteReservation(w http.ResponseWriter, r *http.Request) {
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
+	src := chi.URLParam(r, "src")
+
+	_ = m.DB.DeleteReservation(id)
 
 	m.App.Session.Put(r.Context(), "flash", "Reservation marked as complete")
 	http.Redirect(w, r, fmt.Sprintf("/admin/%s-reservations", src), http.StatusSeeOther)

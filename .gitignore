@@ -3,3 +3,4 @@ database.yml
 run.sh
 .idea
 .DS_Store
+static/admin/

@@ -17,7 +17,7 @@ import (
 	"github.com/darinmilner/goserver/internal/render"
 )
 
-const portNumber = ":8000"
+const portNumber = ":8080"
 
 var app config.AppConfig
 var session *scs.SessionManager
@@ -67,6 +67,7 @@ func run() (*driver.DB, error) {
 	gob.Register(models.User{})
 	gob.Register(models.Room{})
 	gob.Register(models.Restriction{})
+	gob.Register(map[string]int{})
 	//Change to true when in production
 
 	mailChan := make(chan models.MailData)
