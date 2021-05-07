@@ -4,9 +4,9 @@
 {{$src := index .StringMap "src"}}
 <div class="col-md-12">
     <p>Quest: {{$res.FirstName}} {{$res.LastName}}</p>
-    <p><strong>Arrival:</string> {{humanDate $res.StartDate}}</br></p>
-    <p><strong>Departure:</string> {{humanDate $res.EndDate}}</br></p>
-    <p><strong>Room:</string> {{ $res.Room.RoomName}}</br></p>
+    <p><strong>Arrival:</strong> {{humanDate $res.StartDate}}</br></p>
+    <p><strong>Departure:</strong> {{humanDate $res.EndDate}}</br></p>
+    <p><strong>Room:</strong> {{ $res.Room.RoomName}}</br></p>
 
     <p><strong>Reservation Details</strong><br>
         Room: {{$res.Room.RoomName}} <br>

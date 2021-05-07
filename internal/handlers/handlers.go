@@ -693,7 +693,7 @@ func (m *Repository) AdminReservationsCalendar(w http.ResponseWriter, r *http.Re
 
 		data[fmt.Sprintf("reservation_map_%d", x.ID)] = reservationMap
 		data[fmt.Sprintf("block_map_%d", x.ID)] = blockMap
-		log.Print(data[fmt.Sprintf("block_map_%d", x.ID)])
+		//log.Print(data[fmt.Sprintf("block_map_%d", x.ID)])
 
 		m.App.Session.Put(r.Context(), fmt.Sprintf("block_map_%d", x.ID), blockMap)
 
@@ -773,4 +773,72 @@ func (m *Repository) AdminDeleteReservation(w http.ResponseWriter, r *http.Reque
 
 	m.App.Session.Put(r.Context(), "flash", "Reservation marked as complete")
 	http.Redirect(w, r, fmt.Sprintf("/admin/%s-reservations", src), http.StatusSeeOther)
+}
+
+//AdminPostReservationsCalendar handles posts to the calendar
+func (m *Repository) AdminPostReservationsCalendar(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	year, _ := strconv.Atoi(r.Form.Get("y"))
+	month, _ := strconv.Atoi(r.Form.Get("m"))
+
+	//Process Blocks
+
+	rooms, err := m.DB.AllRooms()
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	form := forms.New(r.PostForm)
+
+	for _, x := range rooms {
+		//Get block map from the session, Loop through map
+		//entry in map that is not in posted data and restrictionId > 0 is a block we need to remove
+		curMap := m.App.Session.Get(r.Context(), fmt.Sprintf("block_map_%d", x.ID)).(map[string]int)
+		for name, value := range curMap {
+			//ok will be false if the value is not in the map
+			if val, ok := curMap[name]; ok {
+				//Only pay attention to values > 0 and not in the form post
+				if val > 0 {
+					if !form.HasARequiredField(fmt.Sprintf("remove_block_%d_%s", x.ID, name)) {
+						//delete restriction by ID
+						log.Println("Delete block value: ", value)
+						err := m.DB.DeleteBlockByID(value)
+						if err != nil {
+							log.Println(err)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//handle new blocks
+	for name, _ := range r.PostForm {
+		log.Println("Form has name", name)
+		if strings.HasPrefix(name, "add_block") {
+			exploded := strings.Split(name, "_")
+			roomID, _ := strconv.Atoi(exploded[2])
+			date := exploded[3]
+			log.Println("Expoloded", exploded)
+			log.Println("Would insert block for room Id", roomID)
+			log.Println("Would insert block for date", date)
+
+			t, _ := time.Parse("2006-01-2", exploded[3])
+			err := m.DB.InsertBlockForRoom(roomID, t)
+
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	m.App.Session.Put(r.Context(), "flash", "changes saved")
+	http.Redirect(w, r, fmt.Sprintf("/admin/calendar?y=%d&m=%d", year, month), http.StatusSeeOther)
+
 }
