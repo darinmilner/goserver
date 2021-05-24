@@ -6,3 +6,5 @@ Repository for the bookings and reservations project
 -Uses [chi-router] (https://github.com/go-chi/chi )
 -Uses [nosurf](https://github.com/justinas/nosurf)
 -uses [scs] (https://github.com/alexedwards/scs/v2 )// indirect v2.4.0
+
+-build with Gotemplates for HTML, CSS with Bootstrap, Javascript, and Golang

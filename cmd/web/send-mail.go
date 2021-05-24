@@ -22,6 +22,7 @@ func listenForMail() {
 
 func sendMsg(m models.MailData) {
 	server := mail.NewSMTPClient()
+	//Change values when server is deployed to the cloud  mailgun.com?
 	server.Host = "localhost"
 
 	server.Port = 1025

@@ -16,7 +16,8 @@
 
     <form method="POST" action="/admin/reservations/{{$src}}/{{$res.ID}}" class="" novalidate>
         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-
+        <input type="hidden" name="year" value="{{index .StringMap "year"}}">
+        <input type="hidden" name="month" value="{{index .StringMap "month"}}">
         <div class="form-group mt-5">
             <label for="first-name">First Name</label>
             {{with .Form.Errors.Get "first-name"}}
@@ -59,10 +60,12 @@
         {{if eq $src "cal"}}
             <a href="#!" onclick="window.history.go(-1)" class="btn btn-danger">CANCEL</a>
         {{else}}
-        <a href="/admin/{{$src}}-reservations" class="btn btn-danger">CANCEL</a>
+        <a href="/admin/calendar" class="btn btn-danger">CANCEL</a>
        {{end}}
-        <a href="#!" class="btn btn-info" onclick="processRes({{$res.ID}})">MARK AS PROCESSED</a>
-    </div>
+       {{if eq $res.Processed 0}}
+            <a href="#!" class="btn btn-info" onclick="processRes({{$res.ID}})">MARK AS PROCESSED</a>
+        {{end}}
+        </div>
     <div class="float-right">
         <a href="#!" class="btn btn-danger" onclick="deleteRes({{$res.ID}})">DELETE</a>
     </div>
@@ -82,7 +85,8 @@
             msg: "Are you sure?",
             callback: function (result) {
                 if (result !== false) {
-                    window.location.href = "/admin/process-reservation/{{$src}}/" + id;
+                    window.location.href = "/admin/process-reservation/{{$src}}/" + id
+                    + "/do?={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
                 }
             }
         })
@@ -95,7 +99,9 @@
             msg: "Are you sure?",
             callback: function(result) {
                 if (result !== false) {
-                    window.location.href = "/admin/delete-reservation/{{$src}}/" + id;
+                    window.location.href = "/admin/delete-reservation/{{$src}}/" + id
+                    + "/do?={{index .StringMap "year"}}&m={{index .StringMap "month"}}";
+                    ;
                 }
             }
         })

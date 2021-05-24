@@ -7,43 +7,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+   
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.2/dist/css/datepicker-bs4.min.css">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
 
-    <title>Landing Page</title>
+    <title>The Fort Hotel</title>
     <link rel="stylesheet" type="text/css" href="../static/css/styles.css">
 
     <style>
-        p {
-            color:teal;
-
-        }
-
-        .btn-outline-secondary {
-            border-color: purple;
-            color: dodgerblue;
-        }
-
-        .paraClass {
-            font-size: 3em;
-        }
-
-        .secondClass {
-            color: red;
-        }
-
-        #lastParagraph {
-            text-decoration: underline;
-            font-size: 5em;
-        }
+      
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,6 +75,60 @@
                 </li>
             </ul>
         </div>
+    </nav> -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Fort Hotel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Rooms
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/generals-quarters">General's Quarters</a></li>
+                            <li><a class="dropdown-item" href="/majors-suite">Major's Suite</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search-availability">Search Availability</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        {{if eq .IsAuthenticated 1}}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Admin
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/admin/dashboard">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                    
+                    {{else}}
+                    <a class="nav-link" href="/user/login" tabindex="-1" aria-disabled="true">Login</a>
+                    {{end}}
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
     </nav>
 
 
@@ -102,20 +138,24 @@
 {{end}}
 
 </div>
-<div class="row my-footer">
-    <div class="col paraClass">
-        Left
+<footer class="row my-footer">
+  <div class="row">
+    <div class="col text-center">
+      <strong>The Fort Hotel</strong> <br>
+      100 Main Street <br>
+      AnyTown, AnyWhere 
     </div>
-    <div class="col secondClass paraClass">
-        Middle
+    <div class="col text-center">
+        Your Home Away <br> from Home!
     </div>
-    <div class="col paraClass">
-        Right
+    <div class="col text-center">
+        Copyright 2021
     </div>
-</div>
+  </div>
+</footer>
 
 
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
@@ -124,7 +164,10 @@
     crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.2/dist/js/datepicker-full.min.js"></script>
 <script src="https://unpkg.com/notie"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -175,7 +218,7 @@
     {{end}}
 
     {{with .Flash}}
-     notify("{{.}}", "flash")
+     notify("{{.}}", "success")
     {{end}}
 
     {{with .Warning}}

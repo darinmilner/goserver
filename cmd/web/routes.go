@@ -17,6 +17,7 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(WriteToConsole)
 	mux.Use(NoSurf)
 	mux.Use(SessionLoad)
+	//mux.Use(middleware.Logger)
 
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about", handlers.Repo.About)
@@ -48,10 +49,10 @@ func routes(app *config.AppConfig) http.Handler {
 		mux.Get("/calendar", handlers.Repo.AdminReservationsCalendar)
 		mux.Post("/calendar", handlers.Repo.AdminPostReservationsCalendar)
 
-		mux.Get("/process-reservation/{src}/{id}", handlers.Repo.AdminProcessReservation)
-		mux.Get("/delete-reservation/{src}/{id}", handlers.Repo.AdminDeleteReservation)
+		mux.Get("/process-reservation/{src}/{id}/do", handlers.Repo.AdminProcessReservation)
+		mux.Get("/delete-reservation/{src}/{id}/do", handlers.Repo.AdminDeleteReservation)
 
-		mux.Get("/reservations/{src}/{id}", handlers.Repo.AdminShowReservation)
+		mux.Get("/reservations/{src}/{id}/show", handlers.Repo.AdminShowReservation)
 		mux.Post("/reservations/{src}/{id}", handlers.Repo.AdminPostShowReservation)
 	})
 	fileServer := http.FileServer(http.Dir("./static/"))
